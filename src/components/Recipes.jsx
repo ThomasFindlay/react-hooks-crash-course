@@ -11,6 +11,8 @@ import { parseRecipes } from "../helpers/parseRecipe";
 import { useRecipeContext } from "./context/Recipe.context";
 import TextField from "./TextField";
 
+const BASE_URL = "https://www.themealdb.com/api/json/v1/1/search.php";
+
 const initialState = {
   query: "",
   recipes: [],
@@ -47,12 +49,12 @@ const Recipes = props => {
     abortControllerRef.current?.abort();
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
-    const response = await ofetch(
-      `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`,
-      {
-        signal: abortController.signal,
-      }
-    );
+    const response = await ofetch(BASE_URL, {
+      params: {
+        s: query,
+      },
+      signal: abortController.signal,
+    });
     const formattedRecipes = parseRecipes(response.meals);
     // setRecipes(formattedRecipes);
     console.log(formattedRecipes);
